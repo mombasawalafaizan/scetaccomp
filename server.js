@@ -1,75 +1,52 @@
 const express = require('express');
+const cookieParser = require('cookie-parser');
 const path = require('path');
-const session = require('express-session');
-const MongoDBStore = require('connect-mongodb-session')(session);
-
 require('dotenv').config();
+
 const passport = require('passport');
 
 const app = express();
 
-// MongoDBStore for session storage on MongoDB Atlas using URI
-const store = new MongoDBStore({
-  uri: process.env.MONGODB_URI,
-  collection: 'mySessions',
-});
-
-store.on('error', function (error) {
-  console.log('Error while creating session: ', error);
-});
-
-app.use(
-  session({
-    cookie: {
-      // Save cookie for 1 hour
-      maxAge: 1000 * 3600,
-    },
-    store: store,
-    saveUninitialized: true,
-    secret: process.env.SESSION_SECRET,
-    resave: true,
-  })
-);
-
+app.use(express.json());
+app.use(express.urlencoded({ extended: false }));
 app.use(passport.initialize());
-app.use(passport.session());
+app.use(cookieParser());
 
 // MIDDLEWARES
 // Connect with the database
 require('./middleware/db');
-// Initialize authentication resources
-require('./middleware/authentication');
-
-// For handling POST requests
-app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
-
-// Not to be used maybe
-// app.use(express.static(path.join(__dirname, 'public')));
 
 // ROUTERS
-const loginRouter = require('./routers/login_session');
+const loginRouter = require('./routers/login');
+const studentRouter = require('./routers/student');
+const facultyRouter = require('./routers/faculty');
 
-// Important to note that loginRouter should be used first,
-// so that session can be created, and path should always be '/'
-// for the session to instantiated on first call to the server
 app.use('/auth', loginRouter);
+app.use('/api/student', studentRouter);
+app.use('/api/faculty', facultyRouter);
 
-app.get('/', (req, res) => {
-  console.log('is authenticated', req.isAuthenticated());
-  console.log('from root', req.user ? req.user : 'no user');
-  res.send('home page');
+app.get('/api', (req, res) => {
+	res.json({
+		status: 200,
+		message: 'Scetaccomp server root page',
+	});
+});
+
+const authJwt = require('./middleware/authJwt');
+
+app.get('/api/getUser', authJwt.verifyToken, (req, res) => {
+	res.json({ user: req.user });
 });
 
 //build mode
-app.get('*', (req, res) => {
-  // res.sendFile(path.join(__dirname, 'frontend/public/index.html'));
-  res.send('not a correct url');
-});
+// app.get('*', (req, res) => {
+// 	// res.sendFile(path.join(__dirname, 'frontend/public/index.html'));
+// 	res.json({ status: 404, message: 'Invalid API route' });
+// });
 
 const port = process.env.PORT;
 app.listen(port, () => {
-  console.log('Server started at port ', port);
+	console.log('Server started at port ', port);
 });
 
 module.exports = app;
