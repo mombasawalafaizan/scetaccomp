@@ -32,6 +32,40 @@ app.get('/api', (req, res) => {
 	});
 });
 
+const Accomps = require('./models/studentExcellence');
+
+app.get('/testdb', (req, res) => {
+	// console.log('oledklfasn');
+	Accomps.aggregate([
+		{
+			$lookup: {
+				from: 'students',
+				localField: 'enrolment',
+				foreignField: 'enrolment',
+				as: 'Accomplishments',
+			},
+		},
+		{
+			$unwind: '$Accomplishments',
+		},
+		{
+			$addFields: {
+				Name: '$Accomplishments.name',
+				contact: '$Accomplishments.contact',
+				'Academic Year': '$Accomplishments.academic_year',
+			},
+		},
+		{
+			$project: {
+				Accomplishments: 0,
+			},
+		},
+	]).exec((a, b) => {
+		console.log('from test', a, b);
+	});
+	res.status(200).send({ message: `from server` });
+});
+
 const authJwt = require('./middleware/authJwt');
 
 app.get('/api/getUser', authJwt.verifyToken, (req, res) => {

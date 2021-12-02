@@ -15,12 +15,12 @@ const verifyToken = (req, res, next) => {
 		} else {
 			jwt.verify(token, JWT_SECRET, (err, decoded) => {
 				if (err) {
-					return res.json({
-						status: 401,
-						message: 'Unauthorized!',
+					return res.status(401).json({
+						success: false,
+						message: 'Unauthorized access!',
 					});
 				}
-				console.log('balue', decoded.data);
+				console.log('from verify token in authJwt', decoded.data);
 				req.user = decoded.data;
 				next();
 			});
@@ -35,8 +35,8 @@ const isFaculty = (req, res, next) => {
 	if (req.user.faculty === true) {
 		next();
 	} else {
-		res.json({
-			status: 403,
+		res.status(403).json({
+			success: false,
 			message: 'Require Faculty Role!',
 		});
 	}
@@ -46,8 +46,8 @@ const isStudent = (req, res, next) => {
 	if (req.user.faculty === false) {
 		next();
 	} else {
-		res.json({
-			status: 403,
+		res.status(403).json({
+			success: false,
 			message: 'Require Student Role!',
 		});
 	}

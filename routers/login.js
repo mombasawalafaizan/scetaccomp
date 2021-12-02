@@ -6,12 +6,13 @@ require('dotenv').config();
 // Initialize Google Oauth strategy
 require('../middleware/google_oauth');
 
-// const CLIENT_URL = process.env.CLIENT_URL;
+const CLIENT_URL = process.env.CLIENT_URL;
 const { handleLogin } = require('../controllers/login');
 
 router.get('/login/error', (req, res) => {
 	// Redirect to client error page URL after implementation
-	res.json({ status: 401, message: 'A scet email id is required' });
+	res.redirect(CLIENT_URL);
+	// res.json({ status: 401, message: 'A scet email id is required' });
 });
 
 // Prompt for selection of account

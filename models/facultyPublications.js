@@ -12,9 +12,10 @@ const facultyPublicationSchema = new mongoose.Schema({
 	coauthor: String,
 	status: String,
 	published_in: String,
+	publisher: String,
 	level: String,
 	indexed_at: String,
-	ISBN: String,
+	isbn: String,
 	impact: String,
 	date: Date,
 	name: String,
@@ -23,10 +24,7 @@ const facultyPublicationSchema = new mongoose.Schema({
 	outcome: String,
 	remarks: String,
 	volume: String,
-	page_no: {
-		from: Number,
-		to: Number,
-	},
+	page_no: String,
 });
 
 module.exports = mongoose.model('publication', facultyPublicationSchema);

@@ -3,8 +3,8 @@ const mongoose = require('mongoose');
 // Defining Schema for students
 const studentSchema = new mongoose.Schema({
 	enrolment: {
-		type: Number,
-		// Change to string and rerun the insertion for documents along with in place of academic_year use only shift
+		type: String,
+		// Rerun the insertion for documents with in place of academic_year use only shift
 		// Do this once when you get latest data from college for first year students
 		required: [true, 'Enrolment Number is compulsory for each student.'],
 		unique: true,

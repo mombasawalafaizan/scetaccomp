@@ -1,28 +1,38 @@
-import './App.css';
-import Home from './Home';
-import Profile from './Profile';
-import Azure from './Azure';
-import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
+import OrganizedEventEntry from './forms/OrganizedEventEntry';
+import EventAttendedByStaff from './forms/EventAttendedByStaff';
+import Innovation from './forms/Innovation';
+import StudentExcellence from './forms/StudentExcellence';
+import Conference from './forms/Conference';
+import Login from './references/Login';
+import Home from './references/Home';
+import ResearchForm from './references/ResearchForm';
+import { Route, Switch } from 'react-router';
 
 function App() {
 	return (
-		<div className='App'>
-			<Router>
-				<div className='content'>
-					<Switch>
-						<Route exact path='/'>
-							<Home />
-						</Route>
-						<Route path='/check'>
-							<Profile />
-						</Route>
-						<Route path='/uploadToAzure'>
-							<Azure />
-						</Route>
-					</Switch>
-				</div>
-			</Router>
-		</div>
+		<>
+			<Switch>
+				<Route exact path='/' component={Home} />
+				<Route exact path='/login' component={Login} />
+				<Route exact path='/research' component={ResearchForm} />
+				<Route
+					exact
+					path='/organizedEventEntry'
+					component={OrganizedEventEntry}
+				/>
+				<Route
+					exact
+					path='/EventAttendedByStaff'
+					component={EventAttendedByStaff}
+				/>
+				<Route exact path='/Innovation' component={Innovation} />
+				<Route exact path='/StudentExcellence' component={StudentExcellence} />
+				<Route exact path='/Conference' component={Conference} />
+				<Route exact path='/login/error'>
+					<div>Login error</div>
+				</Route>
+			</Switch>
+		</>
 	);
 }
 

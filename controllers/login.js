@@ -6,6 +6,7 @@ const Faculty = require('../models/facultySchema');
 
 const JWT_SECRET = process.env.JWT_SECRET;
 const NODE_ENV = process.env.NODE_ENV;
+const CLIENT_URL = process.env.CLIENT_URL;
 
 const handleLogin = (req, res) => {
 	try {
@@ -52,7 +53,7 @@ const handleLogin = (req, res) => {
 						maxAge: secondsToExpire * 1000,
 					});
 					console.log('jwt', token);
-					res.redirect('/api');
+					res.redirect(CLIENT_URL);
 				}
 			});
 		} else {
@@ -92,13 +93,13 @@ const handleLogin = (req, res) => {
 					// 	message: 'User authenticated successfully',
 					// 	jwt: token,
 					// });
-					res.redirect('/api');
+					res.redirect(CLIENT_URL);
 				}
 			});
 		}
 	} catch (e) {
 		console.log('catching from callback of google redirect', e);
-		res.json({ status: 500, message: 'No data found' });
+		res.send(500).json({ success: false, message: 'No data found' });
 	}
 	// res.redirect(CLIENT_URL);
 };

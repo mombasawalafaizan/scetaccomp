@@ -24,20 +24,7 @@ const getBlobsInContainer = async (containerClient) => {
 	return returnedBlobUrls;
 };
 
-const createBlobInContainer = async (containerClient, file) => {
-	// create blobClient for container
-	const blobClient = containerClient.getBlockBlobClient(file.name);
-
-	// set mimetype as determined from browser with file upload control
-	const options = { blobHTTPHeaders: { blobContentType: file.type } };
-
-	// upload file
-	await blobClient.uploadData(file, options);
-};
-
-const uploadFileToBlob = async (file) => {
-	if (!file) return [];
-
+const getContainerClient = () => {
 	// get BlobService = notice `?` is pulled out of sasToken - if created in Azure portal
 	const blobService = new BlobServiceClient(
 		`https://${storageAccountName}.blob.core.windows.net/?${sasToken}`
@@ -46,12 +33,44 @@ const uploadFileToBlob = async (file) => {
 	// get Container - full public read access
 	const containerClient = blobService.getContainerClient(containerName);
 
-	// upload file
-	await createBlobInContainer(containerClient, file);
+	return containerClient;
+};
 
-	// get list of blobs in container
-	return getBlobsInContainer(containerClient);
+const createBlobInContainer = async (containerClient, file) => {
+	// create blobClient for container
+	const blob_name = new Date().getTime() + '_' + file.name;
+	const blobClient = containerClient.getBlockBlobClient(blob_name);
+
+	// set mimetype as determined from browser with file upload control
+	const options = { blobHTTPHeaders: { blobContentType: file.type } };
+
+	// upload file
+	await blobClient.uploadData(file, options);
+
+	return `https://${storageAccountName}.blob.core.windows.net/${containerName}/${blob_name}`;
+};
+
+export const deleteBlob = async (url = '') => {
+	const blob_name = url.substr(url.lastIndexOf('/') + 1);
+	if (!blob_name) return false;
+	const containerClient = getContainerClient();
+	try {
+		await containerClient.deleteBlob(blob_name);
+		return true;
+	} catch (error) {
+		// console.log('from here', error);
+		return false;
+	}
+};
+
+export const uploadFileToBlob = async (file) => {
+	if (!file) return null;
+
+	const containerClient = getContainerClient();
+	// upload file and get its url
+	const file_url = await createBlobInContainer(containerClient, file);
+
+	// return the url for the blob
+	return file_url;
 };
 // </snippet_uploadFileToBlob>
-
-export default uploadFileToBlob;

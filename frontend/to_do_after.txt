@@ -1,0 +1,8 @@
+FOR FILES ON AZURE CLOUD:
+
+1) Create a different student account from SCET on Azure using scet email id of any student
+2) Create a storage and container
+3) Generate SAS key for storage (for 1 year)
+4) Migrate all the files from previous account to this account 
+(How? Just download all the files from azure from previous account and upload them to the current account container)
+5) Change the storage name and container name in environment
