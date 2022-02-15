@@ -9,6 +9,7 @@ const FileComponent = ({
 	setFile,
 	onChange = null,
 	customStyles = {},
+	disabled = false,
 }) => {
 	return (
 		<div className='custom-file-component' style={customStyles}>
@@ -24,6 +25,7 @@ const FileComponent = ({
 						  }
 				}
 				type='file'
+				disabled={disabled}
 			/>
 			<InputLabel
 				htmlFor={id}
@@ -39,6 +41,7 @@ const FileComponent = ({
 					color='primary'
 					component='span'
 					style={{ marginTop: '5px' }}
+					disabled={disabled}
 				>
 					<UploadIcon />
 					{!file ? (

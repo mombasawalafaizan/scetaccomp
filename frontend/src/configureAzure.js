@@ -9,20 +9,20 @@ export const isStorageConfigured = () => {
 };
 
 // Not a main feature for now
-const getBlobsInContainer = async (containerClient) => {
-	const returnedBlobUrls = [];
+// const getBlobsInContainer = async (containerClient) => {
+// 	const returnedBlobUrls = [];
 
-	// get list of blobs in container
-	// eslint-disable-next-line
-	for await (const blob of containerClient.listBlobsFlat()) {
-		// if image is public, just construct URL
-		returnedBlobUrls.push(
-			`https://${storageAccountName}.blob.core.windows.net/${containerName}/${blob.name}`
-		);
-	}
+// 	// get list of blobs in container
+// 	// eslint-disable-next-line
+// 	for await (const blob of containerClient.listBlobsFlat()) {
+// 		// if image is public, just construct URL
+// 		returnedBlobUrls.push(
+// 			`https://${storageAccountName}.blob.core.windows.net/${containerName}/${blob.name}`
+// 		);
+// 	}
 
-	return returnedBlobUrls;
-};
+// 	return returnedBlobUrls;
+// };
 
 const getContainerClient = () => {
 	// get BlobService = notice `?` is pulled out of sasToken - if created in Azure portal
@@ -73,4 +73,3 @@ export const uploadFileToBlob = async (file) => {
 	// return the url for the blob
 	return file_url;
 };
-// </snippet_uploadFileToBlob>
